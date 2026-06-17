@@ -25,7 +25,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       titlePart1: 'LIVE IN',
       titlePart2: 'TREND',
       description: 'Streetwear for the bold. Designed for everyday.',
-      image: 'assets/hero-banner.png',
+      image: 'assets/hero-banner.jpeg',
       link: '/products?category=new-drops'
     },
     {
@@ -33,7 +33,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       titlePart1: 'STREET',
       titlePart2: 'ESSENTIALS',
       description: 'Uncompromising comfort. Premium heavyweight fabrics.',
-      image: 'assets/category-men.png',
+      image: 'assets/category-men.jpeg',
       link: '/products?category=oversized'
     },
     {
@@ -41,7 +41,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       titlePart1: 'BOTANICAL',
       titlePart2: 'OVERSIZED',
       description: 'Find your unique nature. Graphic tees for any fit.',
-      image: 'assets/category-women.png',
+      image: 'assets/category-women.jpeg',
       link: '/products?category=women'
     }
   ];
