@@ -1,0 +1,49 @@
+<div class="carousel-wrapper" (mouseenter)="stopAutoPlay()" (mouseleave)="startAutoPlay()">
+  <div class="slides-container">
+    <div 
+      *ngFor="let slide of slides; let i = index" 
+      class="slide" 
+      [class.active]="currentIndex === i"
+    >
+      <!-- Background Image -->
+      <div class="slide-image-wrapper">
+        <img [src]="slide.image" [alt]="slide.titlePart1 + ' ' + slide.titlePart2" class="slide-img" />
+        <div class="slide-overlay"></div>
+      </div>
+
+      <!-- Content Container -->
+      <div class="slide-content-container container">
+        <div class="slide-content animate-fade-in" *ngIf="currentIndex === i">
+          <span class="slide-subtitle">{{slide.subtitle}}</span>
+          <h1 class="slide-title">
+            {{slide.titlePart1}} <span class="accent-text">{{slide.titlePart2}}</span>
+          </h1>
+          <p class="slide-description">{{slide.description}}</p>
+          <div class="slide-actions">
+            <a routerLink="/products" class="btn-primary">SHOP NOW</a>
+            <a [routerLink]="slide.link" class="btn-secondary">EXPLORE DROP</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button class="nav-arrow prev" (click)="prevSlide()" aria-label="Previous Slide">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+  <button class="nav-arrow next" (click)="nextSlide()" aria-label="Next Slide">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
+
+  <!-- Indicator Dots -->
+  <div class="indicator-dots">
+    <button 
+      *ngFor="let slide of slides; let i = index" 
+      class="dot" 
+      [class.active]="currentIndex === i" 
+      (click)="setSlide(i)"
+      [attr.aria-label]="'Go to slide ' + (i + 1)"
+    ></button>
+  </div>
+</div>

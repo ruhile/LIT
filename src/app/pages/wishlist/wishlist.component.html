@@ -1,0 +1,42 @@
+<div class="wishlist-page-container container animate-fade-in">
+  <div class="wishlist-header">
+    <h1 class="wishlist-title">YOUR WISHLIST</h1>
+    <span class="wishlist-count-desc" *ngIf="wishlistItems.length > 0">
+      ({{wishlistItems.length}} {{wishlistItems.length === 1 ? 'item' : 'items'}} saved)
+    </span>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-wishlist-state" *ngIf="wishlistItems.length === 0">
+    <div class="empty-icon-container">
+      <svg viewBox="0 0 24 24" width="60" height="60" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="heart-icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+    </div>
+    <h2>Your wishlist is empty.</h2>
+    <p>Save your favorite streetwear styles here to access them anytime, compare items, or easily move them directly to your shopping cart.</p>
+    <a routerLink="/products" class="btn-primary start-shopping-btn">EXPLORE PRODUCTS</a>
+  </div>
+
+  <!-- Wishlist Grid -->
+  <div class="wishlist-grid" *ngIf="wishlistItems.length > 0">
+    <div *ngFor="let item of wishlistItems" class="wishlist-card animate-fade-in">
+      <button (click)="removeItem(item)" class="wishlist-remove-x" aria-label="Remove from wishlist">
+        ✕
+      </button>
+
+      <div class="wishlist-img-wrapper img-zoom-container" [routerLink]="['/product', item.id]">
+        <img [src]="item.images[0]" [alt]="item.name" />
+      </div>
+
+      <div class="wishlist-details">
+        <h3 class="wishlist-name" [routerLink]="['/product', item.id]">{{item.name}}</h3>
+        <p class="wishlist-price">₹{{item.price}}</p>
+        
+        <div class="wishlist-actions">
+          <button (click)="moveToCart(item)" class="btn-primary move-to-cart-btn">
+            MOVE TO CART
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

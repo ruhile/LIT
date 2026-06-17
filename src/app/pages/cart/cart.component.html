@@ -1,0 +1,151 @@
+<div class="cart-page-container container animate-fade-in">
+  <div class="cart-header">
+    <h1 class="cart-title">YOUR CART</h1>
+    <span class="cart-count-desc" *ngIf="cartItems.length > 0">
+      ({{cartItems.length}} unique {{cartItems.length === 1 ? 'item' : 'items'}} in bag)
+    </span>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-cart-state" *ngIf="cartItems.length === 0">
+    <div class="empty-icon-container">
+      <svg viewBox="0 0 24 24" width="60" height="60" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+    </div>
+    <h2>Your cart is currently empty.</h2>
+    <p>Before you checkout, you must add some products to your shopping cart. You will find a lot of interesting streetwear items on our Shop page.</p>
+    <a routerLink="/products" class="btn-primary start-shopping-btn">START SHOPPING</a>
+  </div>
+
+  <!-- Cart Content Layout -->
+  <div class="cart-layout" *ngIf="cartItems.length > 0">
+    <!-- Left Column: Items list -->
+    <div class="cart-items-column">
+      <div *ngFor="let item of cartItems" class="cart-item-card animate-fade-in">
+        <div class="item-img-container" [routerLink]="['/product', item.product.id]">
+          <img [src]="item.product.images[0]" [alt]="item.product.name" />
+        </div>
+        
+        <div class="item-details">
+          <div class="item-header">
+            <h3 class="item-name" [routerLink]="['/product', item.product.id]">{{item.product.name}}</h3>
+            <button (click)="removeItem(item)" class="item-remove-btn" aria-label="Remove item">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+          </div>
+          
+          <div class="item-meta">
+            <span class="meta-label">Color: 
+              <span class="color-preview" [style.background-color]="item.selectedColor.hex"></span>
+              <strong>{{item.selectedColor.name}}</strong>
+            </span>
+            <span class="meta-label">Size: <strong>{{item.selectedSize}}</strong></span>
+          </div>
+
+          <div class="item-footer">
+            <!-- Quantity controls -->
+            <div class="item-qty-adjuster">
+              <button (click)="updateQuantity(item, -1)" class="qty-btn" aria-label="Decrease quantity">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+              <span class="qty-val">{{item.quantity}}</span>
+              <button (click)="updateQuantity(item, 1)" class="qty-btn" aria-label="Increase quantity">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+            </div>
+            
+            <div class="item-price-block">
+              <span class="price-each" *ngIf="item.quantity > 1">₹{{item.product.price}} each</span>
+              <span class="item-total-price">₹{{item.product.price * item.quantity}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Summary Panel -->
+    <div class="cart-summary-column">
+      <div class="summary-card">
+        <h2 class="summary-title">ORDER SUMMARY</h2>
+        
+        <div class="summary-divider"></div>
+        
+        <!-- Summary items -->
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span class="summary-val">₹{{subtotal}}</span>
+          </div>
+          
+          <div class="summary-row promo-discount-row animate-fade-in" *ngIf="appliedPromo">
+            <span>Discount ({{promoDiscountPercentage}}%)</span>
+            <span class="summary-val discount-val">-₹{{getDiscountAmount()}}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="summary-val">
+              <span *ngIf="getShippingCost() === 0" class="free-shipping-tag">FREE</span>
+              <span *ngIf="getShippingCost() > 0">₹{{getShippingCost()}}</span>
+            </span>
+          </div>
+
+          <div class="shipping-progress-panel" *ngIf="subtotal < 1499">
+            <p class="progress-message">Add <strong>₹{{1499 - subtotal}}</strong> more for <strong>FREE SHIPPING</strong></p>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width]="(subtotal / 1499 * 100) + '%'"></div>
+            </div>
+          </div>
+          <div class="shipping-progress-panel free-unlocked" *ngIf="subtotal >= 1499">
+            <p class="progress-message">🎉 Your order qualifies for <strong>FREE SHIPPING!</strong></p>
+          </div>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <!-- Promo Code Input -->
+        <div class="promo-code-container">
+          <div class="promo-input-wrapper" *ngIf="!appliedPromo">
+            <input 
+              type="text" 
+              placeholder="Promo Code (e.g. LIT15)" 
+              [(ngModel)]="promoCode"
+              class="promo-input"
+              (keyup.enter)="applyPromoCode()"
+            />
+            <button (click)="applyPromoCode()" class="promo-btn">APPLY</button>
+          </div>
+          
+          <!-- Applied promo state -->
+          <div class="applied-promo-box animate-fade-in" *ngIf="appliedPromo">
+            <div class="promo-info">
+              <span class="promo-label">Code: <strong>{{promoCode | uppercase}}</strong></span>
+              <span class="promo-desc">Saved ₹{{getDiscountAmount()}}</span>
+            </div>
+            <button (click)="removePromoCode()" class="promo-remove-x" aria-label="Remove promo">✕</button>
+          </div>
+
+          <div class="promo-message error animate-fade-in" *ngIf="promoError">{{promoError}}</div>
+          <div class="promo-message success animate-fade-in" *ngIf="promoSuccessMessage">{{promoSuccessMessage}}</div>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <!-- Grand Total -->
+        <div class="grand-total-row">
+          <span>GRAND TOTAL</span>
+          <span class="grand-total-val">₹{{getGrandTotal()}}</span>
+        </div>
+
+        <!-- Checkout Actions -->
+        <button (click)="proceedToCheckout()" class="btn-primary checkout-action-btn">
+          PROCEED TO CHECKOUT
+        </button>
+        
+        <div class="secure-checkout-badge">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="lock-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          SSL Secured & Safe Checkout
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

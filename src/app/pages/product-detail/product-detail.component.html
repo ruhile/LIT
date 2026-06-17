@@ -1,0 +1,186 @@
+<div class="product-page-container container animate-fade-in" *ngIf="product">
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a routerLink="/">Home</a> / 
+    <a routerLink="/products" [queryParams]="{category: product.category}">{{product.category | uppercase}}</a> / 
+    <span>{{product.name}}</span>
+  </nav>
+
+  <!-- Main Details Split -->
+  <div class="details-layout">
+    <!-- Left Column: Gallery -->
+    <div class="gallery-column">
+      <div class="main-image-container img-zoom-container">
+        <img [src]="product.images[0]" [alt]="product.name" />
+      </div>
+      
+      <!-- Mock thumbnails (using the same image with different details to simulate options) -->
+      <div class="thumbnails-row">
+        <div class="thumb-card active">
+          <img [src]="product.images[0]" [alt]="product.name" />
+        </div>
+        <div class="thumb-card">
+          <img [src]="product.images[0]" style="object-position: top center;" [alt]="product.name + ' Detail'" />
+        </div>
+        <div class="thumb-card">
+          <img [src]="product.images[0]" style="object-position: bottom center;" [alt]="product.name + ' Fit'" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Product Info -->
+    <div class="info-column">
+      <div class="product-header">
+        <h1 class="product-name">{{product.name}}</h1>
+        <p class="product-price">₹{{product.price}}</p>
+        <span class="tax-info">Tax included. Free shipping.</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Color Selection -->
+      <div class="selection-group">
+        <span class="selection-label">Color: <strong>{{selectedColor?.name}}</strong></span>
+        <div class="colors-grid">
+          <button 
+            *ngFor="let color of product.colors" 
+            [style.background-color]="color.hex"
+            [class.active]="selectedColor?.name === color.name"
+            [class.white-color]="color.name === 'White' || color.name === 'Off-White'"
+            (click)="selectColor(color)"
+            [title]="color.name"
+            class="color-btn"
+          ></button>
+        </div>
+      </div>
+
+      <!-- Size Selection -->
+      <div class="selection-group">
+        <div class="size-header">
+          <span class="selection-label">Size: <strong>{{selectedSize}}</strong></span>
+          <button class="size-guide-trigger">Size Guide</button>
+        </div>
+        <div class="sizes-grid">
+          <button 
+            *ngFor="let size of product.sizes" 
+            [class.active]="selectedSize === size"
+            (click)="selectSize(size)"
+            class="size-btn"
+          >
+            {{size}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Quantity Selection -->
+      <div class="selection-group">
+        <span class="selection-label">Quantity:</span>
+        <div class="quantity-counter">
+          <button (click)="decrementQty()" class="qty-btn" aria-label="Decrease quantity">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+          <span class="qty-number">{{quantity}}</span>
+          <button (click)="incrementQty()" class="qty-btn" aria-label="Increase quantity">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- CTA Action Buttons -->
+      <div class="actions-group">
+        <button (click)="addToCart()" class="btn-primary add-to-cart-btn">
+          ADD TO CART
+        </button>
+        <button (click)="toggleWishlist()" class="wishlist-detail-btn" [class.active]="isInWishlist()">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" [attr.fill]="isInWishlist() ? 'currentColor' : 'none'" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          {{isInWishlist() ? 'WISHLISTED' : 'ADD TO WISHLIST'}}
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Tabs (Info Accordions) -->
+      <div class="tabs-wrapper">
+        <div class="tabs-header">
+          <button 
+            [class.active]="activeTab === 'description'" 
+            (click)="switchTab('description')" 
+            class="tab-title-btn"
+          >
+            DESCRIPTION
+          </button>
+          <button 
+            [class.active]="activeTab === 'shipping'" 
+            (click)="switchTab('shipping')" 
+            class="tab-title-btn"
+          >
+            SHIPPING
+          </button>
+          <button 
+            [class.active]="activeTab === 'returns'" 
+            (click)="switchTab('returns')" 
+            class="tab-title-btn"
+          >
+            RETURNS
+          </button>
+        </div>
+        <div class="tab-content-panel">
+          <!-- Description tab -->
+          <div *ngIf="activeTab === 'description'" class="tab-pane animate-fade-in">
+            <p>{{product.description}}</p>
+            <ul class="product-bullets">
+              <li>Premium heavy cotton fabric</li>
+              <li>Pre-shrunk for matching comfort</li>
+              <li>High-durability graphic print</li>
+              <li>Loose, comfortable streetwear fit</li>
+            </ul>
+          </div>
+          <!-- Shipping tab -->
+          <div *ngIf="activeTab === 'shipping'" class="tab-pane animate-fade-in">
+            <p>We provide free shipping on all orders above ₹1499. Orders are shipped within 24-48 business hours.</p>
+            <ul class="shipping-bullets">
+              <li>Metro cities: Delivery in 2 - 4 business days.</li>
+              <li>Rest of India: Delivery in 3 - 6 business days.</li>
+              <li>Tracking details sent directly via SMS and Email.</li>
+            </ul>
+          </div>
+          <!-- Returns tab -->
+          <div *ngIf="activeTab === 'returns'" class="tab-pane animate-fade-in">
+            <p>Enjoy zero hassle shopping! We have an easy 15-day return and exchange policy from the date of delivery.</p>
+            <ul class="returns-bullets">
+              <li>Ensure the tags are kept intact.</li>
+              <li>Items must be unworn, unwashed and undamaged.</li>
+              <li>Initiate directly from your order tracking screen.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products Section -->
+  <section class="related-section" *ngIf="relatedProducts.length > 0">
+    <h2 class="related-title">YOU MAY ALSO LIKE</h2>
+    <div class="related-grid">
+      <div 
+        *ngFor="let rel of relatedProducts" 
+        [routerLink]="['/product', rel.id]" 
+        class="related-product-card"
+      >
+        <div class="product-img-wrapper img-zoom-container">
+          <img [src]="rel.images[0]" [alt]="rel.name" />
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">{{rel.name}}</h3>
+          <p class="product-price">₹{{rel.price}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Global Toast Notification Alert -->
+<div class="toast-notification animate-fade-in" [class.show]="showToast">
+  <span class="toast-icon">✓</span>
+  <span class="toast-text">{{toastMessage}}</span>
+</div>

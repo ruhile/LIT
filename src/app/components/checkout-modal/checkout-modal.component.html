@@ -1,0 +1,201 @@
+<div class="checkout-overlay" *ngIf="isOpen" (click)="close()">
+  <!-- Modal Card -->
+  <div class="checkout-modal animate-fade-in" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="checkout-header">
+      <h2 class="modal-title">LIT CHECKOUT</h2>
+      <button (click)="close()" class="close-btn" aria-label="Close checkout" *ngIf="step !== 3">
+        ✕
+      </button>
+    </div>
+
+    <!-- Step Progress Bar -->
+    <div class="step-progress-bar">
+      <div class="progress-step" [class.active]="step >= 1" [class.completed]="step > 1">
+        <span class="step-num">1</span>
+        <span class="step-label">Shipping</span>
+      </div>
+      <div class="progress-line" [class.filled]="step > 1"></div>
+      <div class="progress-step" [class.active]="step >= 2" [class.completed]="step > 2">
+        <span class="step-num">2</span>
+        <span class="step-label">Payment</span>
+      </div>
+      <div class="progress-line" [class.filled]="step > 2"></div>
+      <div class="progress-step" [class.active]="step === 3" [class.completed]="step === 3">
+        <span class="step-num">3</span>
+        <span class="step-label">Success</span>
+      </div>
+    </div>
+
+    <!-- Main Content Split -->
+    <div class="checkout-body" [class.success-layout]="step === 3">
+      <!-- Left side: Form steps -->
+      <div class="form-container">
+        <!-- STEP 1: Shipping Details -->
+        <div *ngIf="step === 1" class="step-panel animate-fade-in">
+          <h3 class="panel-heading">SHIPPING ADDRESS</h3>
+          <form (submit)="nextStep(); $event.preventDefault()" class="checkout-form">
+            <div class="form-row">
+              <div class="form-field">
+                <label for="shipping-name">Full Name *</label>
+                <input type="text" id="shipping-name" [(ngModel)]="shippingForm.name" name="name" required placeholder="John Doe" />
+              </div>
+              <div class="form-field">
+                <label for="shipping-email">Email Address *</label>
+                <input type="email" id="shipping-email" [(ngModel)]="shippingForm.email" name="email" required placeholder="johndoe@example.com" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="shipping-address">Delivery Address *</label>
+              <input type="text" id="shipping-address" [(ngModel)]="shippingForm.address" name="address" required placeholder="Apartment, suite, street address" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="shipping-city">City *</label>
+                <input type="text" id="shipping-city" [(ngModel)]="shippingForm.city" name="city" required placeholder="Mumbai" />
+              </div>
+              <div class="form-field">
+                <label for="shipping-zip">Postal / ZIP Code *</label>
+                <input type="text" id="shipping-zip" [(ngModel)]="shippingForm.zip" name="zip" required placeholder="400001" />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="shipping-phone">Phone Number *</label>
+              <input type="tel" id="shipping-phone" [(ngModel)]="shippingForm.phone" name="phone" required placeholder="9876543210" />
+            </div>
+
+            <div class="panel-actions">
+              <span>* Required fields</span>
+              <button type="submit" class="btn-primary continue-btn">CONTINUE TO PAYMENT</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- STEP 2: Payment Details -->
+        <div *ngIf="step === 2" class="step-panel animate-fade-in">
+          <h3 class="panel-heading">PAYMENT METHOD</h3>
+          
+          <div class="payment-method-selector">
+            <label class="method-card" [class.selected]="paymentForm.method === 'card'">
+              <input type="radio" name="paymentMethod" value="card" [(ngModel)]="paymentForm.method" />
+              <span class="method-text">Credit / Debit Card</span>
+            </label>
+            <label class="method-card" [class.selected]="paymentForm.method === 'upi'">
+              <input type="radio" name="paymentMethod" value="upi" [(ngModel)]="paymentForm.method" />
+              <span class="method-text">UPI Payment</span>
+            </label>
+            <label class="method-card" [class.selected]="paymentForm.method === 'cod'">
+              <input type="radio" name="paymentMethod" value="cod" [(ngModel)]="paymentForm.method" />
+              <span class="method-text">Cash On Delivery</span>
+            </label>
+          </div>
+
+          <!-- Card Form details -->
+          <div class="method-details-panel animate-fade-in" *ngIf="paymentForm.method === 'card'">
+            <div class="form-field">
+              <label for="card-number">Card Number *</label>
+              <input type="text" id="card-number" [(ngModel)]="paymentForm.cardNumber" placeholder="4111 2222 3333 4444" />
+            </div>
+            <div class="form-field">
+              <label for="card-name">Cardholder Name *</label>
+              <input type="text" id="card-name" [(ngModel)]="paymentForm.cardName" placeholder="JOHN DOE" />
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="card-expiry">Expiry Date *</label>
+                <input type="text" id="card-expiry" [(ngModel)]="paymentForm.cardExpiry" placeholder="MM/YY" />
+              </div>
+              <div class="form-field">
+                <label for="card-cvv">CVV *</label>
+                <input type="password" id="card-cvv" [(ngModel)]="paymentForm.cardCvv" placeholder="•••" maxlength="3" />
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI Form details -->
+          <div class="method-details-panel animate-fade-in" *ngIf="paymentForm.method === 'upi'">
+            <div class="form-field">
+              <label for="upi-id">Virtual Private Address (UPI VPA ID) *</label>
+              <input type="text" id="upi-id" [(ngModel)]="paymentForm.upiId" placeholder="johndoe@upi" />
+            </div>
+            <p class="method-notes">You will receive a payment request notification on your linked UPI mobile application.</p>
+          </div>
+
+          <!-- COD details -->
+          <div class="method-details-panel animate-fade-in" *ngIf="paymentForm.method === 'cod'">
+            <p class="method-notes">Pay with cash upon delivery of your packages. An extra charge of ₹0 applies. Ensure the phone number matches.</p>
+          </div>
+
+          <div class="panel-actions spacer-top">
+            <button (click)="prevStep()" class="btn-secondary back-btn">BACK</button>
+            <button (click)="placeOrder()" class="btn-primary place-order-btn" [disabled]="isProcessing">
+              <span *ngIf="!isProcessing">PLACE ORDER (₹{{grandTotal}})</span>
+              <span *ngIf="isProcessing">PROCESSING...</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Order Success -->
+        <div *ngIf="step === 3" class="success-panel animate-fade-in">
+          <div class="success-icon-container">
+            <svg viewBox="0 0 24 24" width="60" height="60" stroke="#2e7d32" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <h2 class="success-title">ORDER PLACED SUCCESSFULLY!</h2>
+          <p class="success-desc">Thank you for shopping at LIT, <strong>{{shippingForm.name}}</strong>. Your transaction was processed successfully.</p>
+          
+          <div class="order-info-card">
+            <div class="order-info-row">
+              <span>Order Number:</span>
+              <strong>{{orderId}}</strong>
+            </div>
+            <div class="order-info-row">
+              <span>Email Confirmed:</span>
+              <strong>{{shippingForm.email}}</strong>
+            </div>
+            <div class="order-info-row">
+              <span>Estimated Delivery:</span>
+              <strong>3 - 5 Business Days</strong>
+            </div>
+          </div>
+
+          <button (click)="finishCheckout()" class="btn-primary success-done-btn">CONTINUE SHOPPING</button>
+        </div>
+      </div>
+
+      <!-- Right side: Cart summary list (Hidden on step 3) -->
+      <div class="summary-container" *ngIf="step !== 3">
+        <h3 class="panel-heading">ORDER SUMMARY</h3>
+        
+        <div class="checkout-items-list">
+          <div *ngFor="let item of cartItems" class="checkout-item-row">
+            <img [src]="item.product.images[0]" [alt]="item.product.name" class="checkout-item-img" />
+            <div class="checkout-item-details">
+              <span class="checkout-item-name">{{item.product.name}}</span>
+              <span class="checkout-item-meta">Size: {{item.selectedSize}} | Qty: {{item.quantity}}</span>
+            </div>
+            <span class="checkout-item-price">₹{{item.product.price * item.quantity}}</span>
+          </div>
+        </div>
+
+        <div class="summary-totals">
+          <div class="totals-row">
+            <span>Subtotal</span>
+            <span>₹{{subtotal}}</span>
+          </div>
+          <div class="totals-row">
+            <span>Shipping</span>
+            <span>{{shipping === 0 ? 'FREE' : '₹' + shipping}}</span>
+          </div>
+          <div class="totals-divider"></div>
+          <div class="totals-row grand-total">
+            <span>TOTAL TO PAY</span>
+            <span>₹{{grandTotal}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

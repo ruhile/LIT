@@ -1,0 +1,100 @@
+<div class="category-page-container container animate-fade-in">
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a routerLink="/">Home</a> / <span>Women</span>
+  </nav>
+
+  <!-- Landing Header Banner -->
+  <div class="landing-banner">
+    <div class="banner-image-wrapper">
+      <img src="assets/category-women.png" alt="Women's Streetwear Banner" />
+      <div class="banner-overlay"></div>
+    </div>
+    <div class="banner-content">
+      <span class="banner-tag">COLLECTION</span>
+      <h1 class="banner-title">WOMEN'S COLLECTION</h1>
+      <p class="banner-subtitle">Aesthetic prints, minimalist logo prints, tailored comfy fits for daily streetwear.</p>
+    </div>
+  </div>
+
+  <!-- Categories Row (as in image) -->
+  <section class="subcategories-section animate-fade-in">
+    <h2 class="subcategories-title">CATEGORIES</h2>
+    <div class="subcategories-grid">
+      <div class="subcategory-card img-zoom-container">
+        <div class="subcategory-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1554568218-0f1715e72254?w=500&auto=format&fit=crop" alt="T-Shirts" />
+        </div>
+        <h3 class="subcategory-name">T-SHIRTS</h3>
+      </div>
+      <div class="subcategory-card img-zoom-container">
+        <div class="subcategory-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop" alt="Tops" />
+        </div>
+        <h3 class="subcategory-name">TOPS</h3>
+      </div>
+      <div class="subcategory-card img-zoom-container">
+        <div class="subcategory-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&auto=format&fit=crop" alt="Dresses" />
+        </div>
+        <h3 class="subcategory-name">DRESSES</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <div class="products-section">
+    <div class="section-title-bar">
+      <h2>Featured Women's Apparel ({{womenProducts.length}} items)</h2>
+      <a routerLink="/products" [queryParams]="{category: 'women'}" class="filter-link-btn">
+        OPEN DETAILED FILTERS 
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 5"></polyline></svg>
+      </a>
+    </div>
+
+    <!-- Grid -->
+    <div class="products-grid">
+      <div 
+        *ngFor="let product of womenProducts" 
+        [routerLink]="['/product', product.id]" 
+        class="product-card animate-fade-in"
+      >
+        <div class="product-img-wrapper img-zoom-container">
+          <img [src]="product.images[0]" [alt]="product.name" />
+          
+          <!-- Heart/Wishlist Button -->
+          <button 
+            (click)="toggleWishlist($event, product)" 
+            class="wishlist-btn" 
+            [class.active]="isInWishlist(product.id)"
+            [attr.aria-label]="isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" [attr.fill]="isInWishlist(product.id) ? 'currentColor' : 'none'" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          </button>
+          
+          <!-- Quick Add Hover Overlay -->
+          <div class="quick-add-overlay">
+            <button (click)="quickAddToCart($event, product)" class="quick-add-btn">
+              QUICK ADD +
+            </button>
+          </div>
+        </div>
+        
+        <div class="product-info">
+          <h3 class="product-name">{{product.name}}</h3>
+          <p class="product-price">₹{{product.price}}</p>
+          
+          <!-- Color Swatches -->
+          <div class="color-swatches">
+            <span 
+              *ngFor="let color of product.colors" 
+              class="color-dot" 
+              [style.background-color]="color.hex"
+              [title]="color.name"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
