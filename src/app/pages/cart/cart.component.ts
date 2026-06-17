@@ -89,8 +89,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   getShippingCost(): number {
-    if (this.subtotal === 0) return 0;
-    return this.subtotal >= 1499 ? 0 : 99;
+    return 0;
   }
 
   getDiscountAmount(): number {

@@ -77,7 +77,7 @@ export class CheckoutModalComponent implements OnInit, OnDestroy {
   private loadCartDetails() {
     this.cartItems = this.cartService.getCartItems();
     this.subtotal = this.cartService.getCartTotal();
-    this.shipping = this.subtotal >= 1499 ? 0 : 99;
+    this.shipping = 0;
     
     // We can fetch coupon savings if any, or compute base on mock discount.
     // For simplicity, let's look if there's any active discount in cart. Since cart discount isn't stored in service,

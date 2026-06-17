@@ -89,13 +89,7 @@
             </span>
           </div>
 
-          <div class="shipping-progress-panel" *ngIf="subtotal < 1499">
-            <p class="progress-message">Add <strong>₹{{1499 - subtotal}}</strong> more for <strong>FREE SHIPPING</strong></p>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" [style.width]="(subtotal / 1499 * 100) + '%'"></div>
-            </div>
-          </div>
-          <div class="shipping-progress-panel free-unlocked" *ngIf="subtotal >= 1499">
+          <div class="shipping-progress-panel free-unlocked">
             <p class="progress-message">🎉 Your order qualifies for <strong>FREE SHIPPING!</strong></p>
           </div>
         </div>
