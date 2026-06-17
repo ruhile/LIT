@@ -20,6 +20,21 @@ export interface Product {
 export class ProductService {
   private products: Product[] = [
     {
+      id: 'special-promo-dress',
+      name: 'Special Promo Dress',
+      price: 10,
+      description: 'LIT Special Promo Dress. A gorgeous limited-edition cotton knit dress with a bodycon fit, perfect for casual and semi-formal wear.',
+      images: ['assets/category-women.png'],
+      colors: [
+        { name: 'Red', hex: '#b32d2e' },
+        { name: 'Black', hex: '#111111' }
+      ],
+      sizes: ['S', 'M', 'L'],
+      category: 'women',
+      isNewArrival: true,
+      isBestSeller: true
+    },
+    {
       id: 'rebels-oversized-tee',
       name: 'Rebels Oversized Tee',
       price: 1299,
