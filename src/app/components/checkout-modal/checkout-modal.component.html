@@ -117,11 +117,24 @@
 
           <!-- UPI Form details -->
           <div class="method-details-panel animate-fade-in" *ngIf="paymentForm.method === 'upi'">
+            <div class="qr-container">
+              <p class="qr-title">Scan QR Code to Pay</p>
+              <div class="qr-code-wrapper">
+                <img [src]="getUpiQrCodeUrl()" alt="UPI QR Code" class="upi-qr-image" />
+              </div>
+              <p class="merchant-upi-id">Merchant UPI: <strong>muhammedjabir227-1&#64;okaxis</strong></p>
+              <a [href]="getUpiPaymentUri()" class="btn-upi-link">Pay via UPI App</a>
+            </div>
+            
+            <div class="or-separator">
+              <span>OR</span>
+            </div>
+
             <div class="form-field">
               <label for="upi-id">Virtual Private Address (UPI VPA ID) *</label>
-              <input type="text" id="upi-id" [(ngModel)]="paymentForm.upiId" placeholder="johndoe@upi" />
+              <input type="text" id="upi-id" [(ngModel)]="paymentForm.upiId" placeholder="muhammedjabir227-1&#64;okaxis" />
             </div>
-            <p class="method-notes">You will receive a payment request notification on your linked UPI mobile application.</p>
+            <p class="method-notes">Scan the QR code with GPay, PhonePe, Paytm, or BHIM to pay directly, or enter a UPI ID to simulate a request link.</p>
           </div>
 
           <!-- COD details -->

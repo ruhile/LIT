@@ -39,7 +39,7 @@ export class CheckoutModalComponent implements OnInit, OnDestroy {
     cardNumber: '',
     cardExpiry: '',
     cardCvv: '',
-    upiId: ''
+    upiId: 'muhammedjabir227-1@okaxis'
   };
 
   // Success state
@@ -133,6 +133,19 @@ export class CheckoutModalComponent implements OnInit, OnDestroy {
       // Clear Cart state
       this.cartService.clearCart();
     }, 2000);
+  }
+
+  getUpiPaymentUri(): string {
+    const merchantId = 'muhammedjabir227-1@okaxis';
+    const merchantName = encodeURIComponent('LIT Store');
+    const amount = this.grandTotal;
+    const note = encodeURIComponent('Order Payment');
+    return `upi://pay?pa=${merchantId}&pn=${merchantName}&am=${amount}&cu=INR&tn=${note}`;
+  }
+
+  getUpiQrCodeUrl(): string {
+    const upiUri = this.getUpiPaymentUri();
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
   }
 
   finishCheckout() {
