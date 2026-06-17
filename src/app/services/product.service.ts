@@ -20,6 +20,21 @@ export interface Product {
 export class ProductService {
   private products: Product[] = [
     {
+      id: 'super-promo-dress',
+      name: 'Super Promo Dress',
+      price: 1,
+      description: 'LIT Super Promo Dress. An exclusive 1-rupee flash sale fashion dress designed with a sleek fit and breathable cotton fabric.',
+      images: ['assets/category-women.png'],
+      colors: [
+        { name: 'Red', hex: '#b32d2e' },
+        { name: 'White', hex: '#ffffff' }
+      ],
+      sizes: ['S', 'M', 'L'],
+      category: 'women',
+      isNewArrival: true,
+      isBestSeller: true
+    },
+    {
       id: 'special-promo-dress',
       name: 'Special Promo Dress',
       price: 10,
