@@ -124,15 +124,40 @@ export class CheckoutModalComponent implements OnInit, OnDestroy {
 
     this.isProcessing = true;
 
-    // Simulate API network call
-    setTimeout(() => {
-      this.isProcessing = false;
-      this.orderId = 'LIT-' + Math.floor(100000 + Math.random() * 900000);
-      this.step = 3;
-      
-      // Clear Cart state
-      this.cartService.clearCart();
-    }, 2000);
+    const items = this.cartItems.map(item => ({
+      productId: item.product.id,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+      selectedColor: item.selectedColor,
+      selectedSize: item.selectedSize
+    }));
+
+    const orderDetails = {
+      shippingDetails: this.shippingForm,
+      paymentDetails: {
+        method: this.paymentForm.method,
+        cardName: this.paymentForm.method === 'card' ? this.paymentForm.cardName : undefined,
+        upiId: this.paymentForm.method === 'upi' ? this.paymentForm.upiId : undefined
+      },
+      items,
+      subtotal: this.subtotal,
+      shipping: this.shipping,
+      grandTotal: this.grandTotal
+    };
+
+    this.cartService.placeOrder(orderDetails).subscribe({
+      next: (res) => {
+        this.isProcessing = false;
+        this.orderId = res.orderId;
+        this.step = 3;
+        this.cartService.clearCart();
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        alert(err?.error?.message || 'There was an error placing your order. Please try again.');
+      }
+    });
   }
 
   getUpiPaymentUri(): string {

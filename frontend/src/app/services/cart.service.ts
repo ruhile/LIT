@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from './product.service';
 
@@ -19,7 +20,7 @@ export class CartService {
   private isCheckoutOpenSubject = new BehaviorSubject<boolean>(false);
   isCheckoutOpen$: Observable<boolean> = this.isCheckoutOpenSubject.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.loadCart();
   }
 
@@ -111,5 +112,9 @@ export class CartService {
 
   closeCheckout() {
     this.isCheckoutOpenSubject.next(false);
+  }
+
+  placeOrder(orderDetails: any): Observable<any> {
+    return this.http.post<any>('/api/orders', orderDetails);
   }
 }
